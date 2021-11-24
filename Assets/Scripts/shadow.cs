@@ -5,6 +5,8 @@ public class shadow : MonoBehaviour
 {
     public SpriteRenderer castObject;
     public RenderTexture texture;
+    int nowText=0;
+    List<Texture2D> textures=new List<Texture2D>();
     Texture2D renderTextureToTexture2D()
     {
         Texture2D texture2D = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
@@ -21,9 +23,24 @@ public class shadow : MonoBehaviour
 
         return texture2D;
     }
+    int listAddTexture(Texture2D tempTexture)
+    {
+        if (textures.Count < 5) {
+            textures.Add(tempTexture);
+            nowText = textures.Count - 1;
+        }
+        else{
+            nowText = nowText + 1 >= 5 ? 0 : nowText + 1;
+            Destroy(textures[nowText]);
+            textures[nowText] = tempTexture;
+        }
+        return nowText;
+    }
     private void Update()
     {
         Texture2D tempTexture = renderTextureToTexture2D();
-        castObject.sprite = Sprite.Create(tempTexture, new Rect(0, 0, tempTexture.width, tempTexture.height), Vector2.zero); ;    
+        int temp = listAddTexture(tempTexture);
+        castObject.sprite = Sprite.Create(tempTexture, new Rect(0, 0, tempTexture.width, tempTexture.height), Vector2.zero); ;
+       // Destroy(tempTexture);
     }
 }
